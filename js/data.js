@@ -85,7 +85,7 @@ async function loadOffers(bust) {
       (stores[sid].offers || []).forEach((o, i) => {
         o.sid = sid; o.city = c;
         o.id = o.id || `${c}-${sid}-${i}`;
-        o.validTo = stores[sid].validTo;
+        o.validTo = o.validTo || stores[sid].validTo;
         o.disc = o.oldPrice && o.oldPrice > o.price ? Math.round((1 - o.price / o.oldPrice) * 100) : 0;
         OFFER_INDEX[o.id] = o;
       });

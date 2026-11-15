@@ -150,8 +150,8 @@ const UI = {
   storeView(v) {
     const st = STORES[v.sid], info = storeInfo(State.city, v.sid), offers = info.offers || [];
     let body = this.demoNote();
-    if (info.stale) body += '<div class="note">⚠️ Volantino nuovo non trovato all\'ultimo screening: queste offerte potrebbero non essere aggiornate.</div>';
-    if (!offers.length) body += this.empty('Nessuna offerta trovata per questo supermercato.');
+    if (info.stale && offers.length) body += '<div class="note">⚠️ Volantino nuovo non trovato all\'ultimo screening: queste offerte potrebbero non essere aggiornate.</div>';
+    if (!offers.length) body += this.empty('All\'ultimo screening non c\'erano offerte leggibili per questo supermercato.<br>Puoi guardare il volantino dal link qui sotto.');
     else if (v.tab === 'flyer') {
       const list = offers.filter(o => !v.cat || o.cat === v.cat);
       body += this.chips(offers, v.cat) + list.map(o => this.offerCard(o)).join('');
@@ -159,7 +159,8 @@ const UI = {
       const top = offers.slice().sort((a, b) => b.disc - a.disc).slice(0, 8);
       body += '<h3>🏆 Gli sconti più forti del volantino</h3>' + top.map(o => this.offerCard(o)).join('');
     }
-    if (st.url) body += `<a class="link" href="${st.url}" target="_blank" rel="noopener">Apri il sito ufficiale di ${esc(st.name)} ↗</a>`;
+    if (/^https:\/\//.test(info.flyerUrl || '')) body += `<a class="link" href="${esc(info.flyerUrl)}" target="_blank" rel="noopener">Sfoglia i volantini di ${esc(st.name)} ↗</a>`;
+    else if (st.url) body += `<a class="link" href="${st.url}" target="_blank" rel="noopener">Apri il sito ufficiale di ${esc(st.name)} ↗</a>`;
     const white = st.sign.toLowerCase() === '#ffffff';
     return {
       bg: white ? st.text : st.sign, fg: white ? '#ffffff' : st.text,
@@ -224,11 +225,17 @@ const UI = {
   },
 
   betterAlt(item) {
-    if (!item.key || !item.unitPrice) return null;
-    let best = null;
+    // Confronto per prezzo al kg/litro quando c'è; altrimenti solo fra prodotti dello stesso tipo e della stessa marca.
+    if (!item.key) return null;
+    const norm = s => String(s || '').trim().toLowerCase();
+    let best = null, bestVal = Infinity;
     for (const o of allOffers(State.city)) {
-      if (o.key !== item.key || o.sid === item.sid || !o.unitPrice || this.inCart(o.id)) continue;
-      if (o.unitPrice < item.unitPrice * 0.97 && (!best || o.unitPrice < best.unitPrice)) best = o;
+      if (o.key !== item.key || o.sid === item.sid || this.inCart(o.id)) continue;
+      let mine, theirs;
+      if (o.unitPrice && item.unitPrice) { mine = item.unitPrice; theirs = o.unitPrice; }
+      else if (norm(item.brand) && norm(item.brand) === norm(o.brand)) { mine = item.price; theirs = o.price; }
+      else continue;
+      if (theirs < mine * 0.97 && theirs < bestVal) { best = o; bestVal = theirs; }
     }
     return best;
   },
@@ -257,7 +264,7 @@ const UI = {
           <div class="o-price"><b>${eur(it.price)}</b>${it.oldPrice ? `<s>${eur(it.oldPrice)}</s>` : ''}</div>
           <button class="save del" data-act="remove" data-id="${esc(it.id)}" aria-label="Rimuovi">✕</button>
         </div>`;
-        if (alt) body += `<div class="alt">💡 Da ${this.pill(alt.sid)} costa meno: <b>${eur(alt.price)}</b> <span class="o-sub">(${esc(alt.brand || '')} ${esc(alt.qty || '')}, ${eur(alt.unitPrice)}/${esc(alt.unit)})</span>
+        if (alt) body += `<div class="alt">💡 Da ${this.pill(alt.sid)} costa meno: <b>${eur(alt.price)}</b> <span class="o-sub">(${esc([alt.brand, alt.name, alt.qty].filter(Boolean).join(' · '))}${alt.unitPrice ? `, ${eur(alt.unitPrice)}/${esc(alt.unit)}` : ' — controlla che il formato sia lo stesso'})</span>
           <button class="btn small" data-act="swap" data-id="${esc(it.id)}" data-alt="${esc(alt.id)}">Sostituisci</button></div>`;
       }
     }
