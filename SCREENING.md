@@ -1,6 +1,6 @@
 # Screening volantini — istruzioni per Claude
 
-Queste istruzioni sono eseguite da una routine Claude (ogni domenica, o a richiesta).
+Queste istruzioni sono eseguite da un'attività programmata di Claude sul PC (ogni domenica, o a richiesta).
 Obiettivo: riscrivere `data/offers.json` con le offerte reali dei volantini in corso, poi pubblicarlo.
 
 ## Regola numero uno
@@ -83,3 +83,5 @@ Campi di ogni offerta:
 - Altrimenti scrivi il supermercato con `"offers": []` e `"stale": true`.
 
 Tutti i supermercati della tabella devono comparire nel file, anche se vuoti.
+
+Se non hai letto nessuna offerta per nessun supermercato, non scrivere il file e non fare commit: spiega solo cosa è andato storto.

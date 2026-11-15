@@ -85,7 +85,7 @@ const UI = {
     if (act === 'store') return this.open({ kind: 'store', sid: d.sid, tab: 'flyer', cat: '', from: v });
     if (act === 'screen') {
       if (ROUTINE_URL) window.open(ROUTINE_URL, '_blank', 'noopener');
-      else this.toast('Lo screening automatico non è ancora collegato.', 3500);
+      else this.toast('Lo screening parte dal PC: nell\'app Claude apri le attività programmate, scegli “Spesa City – screening volantini” e premi “Esegui ora”.', 9000);
       return;
     }
     if (act === 'refresh') {
@@ -203,7 +203,7 @@ const UI = {
         <div><b>Ultimo aggiornamento:</b> ${fmtDate(DATA.updatedAt)}${DATA.source === 'demo' ? ' (dimostrativo)' : ''}</div>
         <button class="btn" data-act="screen">🤖 Rifai lo screening supermercati</button>
         <button class="btn light" data-act="refresh">🔄 Ricarica le offerte</button>
-        <p class="hint">Lo screening lo fa il tuo Claude: si apre la sua pagina, tocca “Run now”. Dopo qualche minuto torna qui e ricarica le offerte.</p>
+        <p class="hint">Lo screening lo fa Claude sul PC di casa, ogni domenica mattina. Quando ha finito, tocca “Ricarica le offerte”.</p>
       </div>`;
     }
     return {
