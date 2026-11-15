@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Spesa City</title>
+  <meta name="theme-color" content="#2f7d32">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Spesa City">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <div id="hud">
+    <button id="btnCity" class="hud-btn">Città</button>
+    <button id="btnCart" class="hud-btn" aria-label="Carrello">🛒 <span id="cartN" class="badge hidden">0</span></button>
+  </div>
+  <div id="toast"></div>
+
+  <section id="sheet" class="hidden">
+    <header id="sheetHead">
+      <div><h2 id="sheetTitle"></h2><div id="sheetSub"></div></div>
+      <button id="sheetClose" data-act="close" aria-label="Chiudi">✕</button>
+    </header>
+    <nav id="sheetTabs"></nav>
+    <div id="sheetBody"></div>
+  </section>
+
+  <section id="menu" class="hidden">
+    <div class="menu-box">
+      <div class="logo">🛒</div>
+      <h1>SPESA CITY</h1>
+      <p>Scegli la tua città e vai a caccia di offerte</p>
+      <div id="cities"></div>
+    </div>
+  </section>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
